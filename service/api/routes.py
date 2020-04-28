@@ -1,17 +1,7 @@
 from flask import abort, jsonify, request, g
-from flask_httpauth import HTTPBasicAuth
 from flask import current_app as app
 from .models import db, User
-
-auth = HTTPBasicAuth()
-
-@auth.verify_password
-def verify_password(username, password):
-    user = User.query.filter_by(username = username).first()
-    if not user or not user.verify_password(password):
-        return False
-    g.user = user
-    return True
+from .auth import auth
 
 @app.route('/api/')
 def intro():
@@ -39,6 +29,12 @@ def get_user(id):
     if not user:
         abort(400)
     return (jsonify({'username': user.username}), 200)
+
+@app.route('/api/token')
+@auth.login_required
+def get_auth_token():
+    token = g.user.generate_auth_token(600)
+    return (jsonify({'token': token.decode('ascii'), 'duration': 600}), 200)
 
 @app.route('/api/resource')
 @auth.login_required
