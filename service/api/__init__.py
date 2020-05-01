@@ -1,20 +1,25 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import environ
-from .log import logger
+from os import environ, sys
+from .log import accesslogger
+import logging
+
+
 
 db = SQLAlchemy()
 
 def create_app():
     """Construct the core application."""
     app = Flask(__name__)
+    app.logger.addHandler(logging.StreamHandler(sys.stdout))
+    app.logger.setLevel(logging.ERROR)
 
     if environ.get('ENV') == 'PRODUCTION':
         app.config.from_object('config.ProductionConfig')
-        logger.info("Loaded: Configuration of Production")
+        accesslogger.info("Loaded: Configuration of Production")
     else:
         app.config.from_object('config.DevelopmentConfig')
-        logger.info("Loaded: configuration of Development")
+        accesslogger.info("Loaded: configuration of Development")
 
     db.init_app(app)
 

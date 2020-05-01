@@ -2,14 +2,14 @@ from flask import abort, jsonify, request, g
 from flask import current_app as app
 from .models import db, User
 from .auth import auth
-from .log import logger
+from .log import accesslogger
 
 @app.route('/api/')
 def intro():
     response = dict()
     response["info"]="Basic Auth API"
     response["developer"]="Jalaz Kumar"
-    logger.info("Accessed: API Introduction")
+    accesslogger.info("Accessed: API Introduction")
     return (jsonify(response), 200)
 
 @app.route('/api/users', methods=['POST'])
@@ -23,7 +23,7 @@ def register_user():
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
-    logger.info("Created: New User - f'{id}")
+    accesslogger.info("Created: New User - f'{id}")
     return (jsonify({'username': user.username}), 201)
 
 @app.route('/api/users/<int:id>')
@@ -31,18 +31,18 @@ def get_user(id):
     user = User.query.get(id)
     if not user:
         abort(400)
-    logger.info("Queried: User Details - f'{id}")
+    accesslogger.info("Queried: User Details - f'{id}")
     return (jsonify({'username': user.username}), 200)
 
 @app.route('/api/token')
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token(600)
-    logger.info("Created: Token - f'{g.user.id}")
+    accesslogger.info("Created: Token - f'{g.user.id}")
     return (jsonify({'token': token.decode('ascii'), 'duration': 600}), 200)
 
 @app.route('/api/resource')
 @auth.login_required
 def get_resource():
-    logger.info("Access Granted: User - f'{g.user.id}")
+    accesslogger.info("Access Granted: User - f'{g.user.id}")
     return (jsonify({'data': 'Hello, %s!' % g.user.username}), 200)
