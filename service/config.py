@@ -1,5 +1,4 @@
 from os import environ
-from api.log import logger
 
 class DevelopmentConfig(object):
     DEBUG = True
