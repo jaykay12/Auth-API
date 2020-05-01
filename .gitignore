@@ -3,4 +3,4 @@ venv
 *.env
 *.db
 __pycache__
-logs
+*.log
