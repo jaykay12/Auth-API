@@ -10,7 +10,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
-    password_hash = db.Column(db.String(512))
+    password_hash = db.Column(db.Text)
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
