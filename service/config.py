@@ -8,6 +8,13 @@ class DevelopmentConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
+class StageConfig(object):
+    SECRET_KEY = environ.get('SECRET_KEY')
+
+    SQLALCHEMY_DATABASE_URI = environ.get("STAGE_DATABASE_URL")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
 class ProductionConfig(object):
     SECRET_KEY = environ.get('SECRET_KEY')
 

@@ -17,6 +17,9 @@ def create_app():
     if environ.get('ENV') == 'PRODUCTION':
         app.config.from_object('config.ProductionConfig')
         accesslogger.info("Loaded: Configuration of Production")
+    elif environ.get('ENV') == 'STAGE':
+        app.config.from_object('config.StageConfig')
+        accesslogger.info("Loaded: Configuration of Stage")
     else:
         app.config.from_object('config.DevelopmentConfig')
         accesslogger.info("Loaded: configuration of Development")
