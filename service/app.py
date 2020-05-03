@@ -1,6 +1,4 @@
-from api import create_app
-
-app = create_app()
+from api import authapp
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    authapp.run(host='0.0.0.0')

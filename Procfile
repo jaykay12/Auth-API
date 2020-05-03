@@ -1,1 +1,1 @@
-web: cd service && gunicorn app:app
+web: cd service && gunicorn wsgi:app
