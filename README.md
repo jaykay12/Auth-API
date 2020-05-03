@@ -5,3 +5,6 @@
 ![Flask-SQLAlchemy](https://img.shields.io/badge/Flask--SQLAlchemy-2.4.1-red.svg?longCache=true&style=flat-square&logo=flask&logoColor=white&colorA=4c566a&colorB=5e81ac)
 
 Authentication API based on Flask-SQLAlchemy
+
+[![Build Status](https://travis-ci.org/jaykay12/Auth-API.svg?branch=master)](https://travis-ci.org/jaykay12/Auth-API)
+![Heroku](http://heroku-badge.herokuapp.com/?app=auth-api-flask&root=/api)
