@@ -4,8 +4,6 @@ from os import environ, sys
 from .log import accesslogger
 import logging
 
-
-
 db = SQLAlchemy()
 
 def create_app():
