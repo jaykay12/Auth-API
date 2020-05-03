@@ -14,12 +14,16 @@ def create_app():
     app.logger.addHandler(logging.StreamHandler(sys.stdout))
     app.logger.setLevel(logging.ERROR)
 
+    """Loading configuratons."""
     if environ.get('ENV') == 'PRODUCTION':
         app.config.from_object('config.ProductionConfig')
         accesslogger.info("Loaded: Configuration of Production")
     elif environ.get('ENV') == 'STAGE':
         app.config.from_object('config.StageConfig')
         accesslogger.info("Loaded: Configuration of Stage")
+    elif environ.get('ENV') == 'TESTING':
+        app.config.from_object('config.TestConfig')
+        accesslogger.info("Loaded: Configuration of Testing")
     else:
         app.config.from_object('config.DevelopmentConfig')
         accesslogger.info("Loaded: configuration of Development")
@@ -31,3 +35,5 @@ def create_app():
         db.create_all()  # Create database tables for our data models
 
         return app
+
+authapp = create_app()
