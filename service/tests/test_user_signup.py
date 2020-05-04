@@ -26,6 +26,15 @@ class TESTS_USER_SIGNUP(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(json.loads(response.get_data())["username"],userinfo["username"])
 
+    def test_usersignup_duplicate(self):
+        userinfo = { "id": "75652", "username": "jalaz.kumar", "password": "jalaz" }
+        headers = { 'Content-Type': 'application/json'}
+        response = self.app.post('/api/users', headers = headers, json=userinfo)
+        userinfo = { "id": "75652", "username": "jalaz.kumar", "password": "jalaz" }
+        headers = { 'Content-Type': 'application/json'}
+        response = self.app.post('/api/users', headers = headers, json=userinfo)
+        self.assertEqual(response.status_code, 503)
+
     def test_usersignup_empty(self):
         userinfo = {}
         headers = { 'Content-Type': 'application/json'}

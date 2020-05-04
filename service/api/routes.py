@@ -21,10 +21,15 @@ def register_user():
         abort(400)
     user = User(id=int(id),username=username)
     user.hash_password(password)
-    db.session.add(user)
-    db.session.commit()
-    accesslogger.info("Created: New User - f'{id}")
-    return (jsonify({'username': user.username}), 201)
+    try:
+        db.session.add(user)
+        db.session.commit()
+        accesslogger.info("Created: New User - f'{id}")
+        return (jsonify({'username': user.username}), 201)
+    except:
+        db.session.rollback()
+        accesslogger.info("DB Exception occurred")
+        return (jsonify({'username': ''}), 503)
 
 @app.route('/api/users/<int:id>')
 def get_user(id):
