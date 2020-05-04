@@ -1,18 +1,27 @@
 from service.api import authapp,db
 import unittest
 
-class TESTSAPI(unittest.TestCase):
+class TESTS_BASE(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         authapp.config['TESTING'] = True
         self.app = authapp.test_client()
+
+    @classmethod
+    def tearDownClass(self):
+        pass
+
+    def setUp(self):
+        pass
 
     def tearDown(self):
         pass
 
-    def test_base(self):
+    def test_intro(self):
         response = self.app.get('/api/')
         self.assertEqual(response.status_code, 200)
+
 
 if __name__ == "__main__":
     unitest.main()
