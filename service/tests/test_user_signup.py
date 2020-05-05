@@ -1,4 +1,4 @@
-from service.api import authapp,db
+from service.api import authapp
 import unittest
 import json
 

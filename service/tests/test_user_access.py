@@ -1,8 +1,9 @@
-from service.api import authapp, db
+from service.api import authapp
 import unittest
 import json
 
-class BaseTest(unittest.TestCase):
+class TEST_USER_ACCESS(unittest.TestCase):
+
     @classmethod
     def setUpClass(self):
         authapp.config['TESTING'] = True
@@ -12,13 +13,6 @@ class BaseTest(unittest.TestCase):
     def tearDownClass(self):
         pass
 
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
-class TEST_USER_ACCESS(BaseTest):
     def setUp(self):
         userinfo = { "id": "75654", "username": "jalaz.kumar", "password": "jalaz" }
         headers = { 'Content-Type': 'application/json'}
