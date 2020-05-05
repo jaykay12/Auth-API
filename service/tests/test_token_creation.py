@@ -8,15 +8,16 @@ class TESTS_TOKEN_CREATION(unittest.TestCase):
     def setUpClass(self):
         authapp.config['TESTING'] = True
         self.app = authapp.test_client()
+        userinfo = { "id": "75654", "username": "jalaz.kumar", "password": "jalaz" }
+        headers = { 'Content-Type': 'application/json'}
+        response = self.app.post('/api/users', headers = headers, json=userinfo)
 
     @classmethod
     def tearDownClass(self):
         pass
 
     def setUp(self):
-        userinfo = { "id": "75654", "username": "jalaz.kumar", "password": "jalaz" }
-        headers = { 'Content-Type': 'application/json'}
-        response = self.app.post('/api/users', headers = headers, json=userinfo)
+        pass
 
     def tearDown(self):
         pass
