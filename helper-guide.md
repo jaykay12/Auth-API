@@ -28,7 +28,7 @@
 
 ## Running on Production Environment
 + Install Heroku CLI on machine using `curl https://cli-assets.heroku.com/install-ubuntu.sh | sh` and verify using `heroku --version`
-+ Confiugre Heroku deploy on local machine.
++ Configure Heroku deploy on local machine.
   - Login to heroku account using `heroku login`
   - Create heroku app using `heroku create auth-api-flask`
   - Set buildpack for the app using `heroku buildpacks:set heroku/python`
@@ -37,7 +37,18 @@
 + Login to Heroku platform and add `Heroku Postgres` as an add-on.
 + Modify config vars as follows:  
  `PRODUCTION_DATABASE_URL = <HEROKU-PROVIDED-URL>`    
- `ENV = PRODUCTION`     
+ `ENV = 'PRODUCTION'`     
  `SECRET_KEY = <API-SECRET-KEY>`
 + Push the project to Heroku platform using `git push heroku master`
 + Configure aut-deploy from GitHub hooks.
+
+## Running tests and Travis CI integration
++ Add the following line to the file **api.env**   
+`export TESTING_DATABASE_URL='sqlite:///:memory:'`
++ Run tests on dev environment using `bash run-tests.sh`
++ Signup to Travis CI using GitHub and toggle the button to ON for Auth-API from `https://travis-ci.org/github/jaykay12/Auth-API`
++ Add the following entries in `Environment Variables` of Travis CI
+  `ENV = 'TESTING'`      
+  `SECRET_KEY = <API-SECRET-KEY`      
+  `TESTING_DATABASE_URL = 'sqlite:///:memory:'`
++ Add a YAML file in root folder of repo namely, `travis.yml` and add configurations in it.
