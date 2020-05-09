@@ -28,3 +28,11 @@ class TestConfig(object):
     SQLALCHEMY_DATABASE_URI = environ.get("TESTING_DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
+class oAuthConfig(object):
+    OAUTH_CREDENTIALS = {
+        "facebook": {
+                "id": environ.get("FACEBOOK_APP_ID"),
+                "secret": environ.get("FACEBOOK_APP_SECRET")
+                }
+    }
