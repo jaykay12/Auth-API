@@ -21,16 +21,19 @@ def create_app():
         accesslogger.info("Loaded: Configuration of Stage")
     elif environ.get('ENV') == 'TESTING':
         app.config.from_object('config.TestConfig')
+        app.config.from_object('config.oAuthConfig')
         accesslogger.info("Loaded: Configuration of Testing")
     else:
         app.config.from_object('config.DevelopmentConfig')
+        app.config.from_object('config.oAuthConfig')
         accesslogger.info("Loaded: configuration of Development")
 
     db.init_app(app)
 
     with app.app_context():
-        from . import routes  # Import routes
-        db.create_all()  # Create database tables for our data models
+        from . import routes_auth
+        from . import routes_oauth
+        db.create_all()
 
         return app
 
