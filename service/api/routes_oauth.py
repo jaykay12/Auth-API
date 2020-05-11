@@ -1,5 +1,5 @@
 from flask import current_app as app
-from flask import redirect, jsonify, request
+from flask import redirect, jsonify, request, flash
 from .oauth import OAuthSignIn
 from .models import db, User
 from flask_login import current_user, login_user
@@ -10,7 +10,6 @@ def index():
     response = dict()
     response["info"]="Basic oAuth API"
     response["developer"]="Jalaz Kumar"
-    print(OAuthSignIn.providers)
     response['providers']=str(OAuthSignIn.providers)
     accesslogger.info("Accessed: oAuth API Introduction")
     return (jsonify(response), 200)
@@ -39,9 +38,11 @@ def oauth_callback(provider):
     return redirect('/oauth/success/'+str(provider), 302)
 
 @app.route('/oauth/failure/<provider>')
-def oauth_fail(provider):
-    return (jsonify({"message":"oAuth Failed"}), 503)
+def oauth_failure(provider):
+    flash("oAuth Failed")
+    return (jsonify({"message":"DB Error / Not Authorized"}), 503)
 
 @app.route('/oauth/success/<provider>')
 def oauth_success(provider):
+    flash("oAuth Success")
     return (jsonify({"message":"oAuth Success"}), 200)

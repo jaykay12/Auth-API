@@ -34,5 +34,9 @@ class oAuthConfig(object):
         "facebook": {
                 "id": environ.get("FACEBOOK_APP_ID"),
                 "secret": environ.get("FACEBOOK_APP_SECRET")
-                }
+                },
+        "twitter": {
+                "id": environ.get("TWITTER_API_KEY"),
+                "secret": environ.get("TWITTER_API_SECRET")
+        }
     }

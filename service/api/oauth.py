@@ -1,6 +1,6 @@
 import json
 
-from rauth import OAuth2Service
+from rauth import OAuth1Service, OAuth2Service
 from flask import current_app, url_for, request, redirect, session
 
 class OAuthSignIn(object):
@@ -47,11 +47,12 @@ class FacebookSignIn(OAuthSignIn):
         )
 
     def authorize(self):
-        return redirect(self.service.get_authorize_url(
-            scope = 'email',
-            response_type = 'code',
-            redirect_uri = self.get_callback_url()
-        ))
+        params = {
+            'scope': 'email',
+            'response_type': 'code',
+            'redirect_uri': self.get_callback_url()
+        }
+        return redirect(self.service.get_authorize_url(**params))
 
     def callback(self):
         def decode_json(payload):
@@ -59,14 +60,47 @@ class FacebookSignIn(OAuthSignIn):
 
         if 'code' not in request.args:
             return None,None,None
-        oauth_session = self.service.get_auth_session(
-            data = {'code': request.args['code'],
-                    'grant_type': 'authorization_code',
-                    'redirect_uri': self.get_callback_url()},
-            decoder = decode_json
+        data = {
+            'code': request.args['code'],
+            'grant_type': 'authorization_code',
+            'redirect_uri': self.get_callback_url()
+        }
+        oauth_session = self.service.get_auth_session(data = data, decoder = decode_json)
+        me = oauth_session.get('me?fields=id,email').json()
+
+        return ('facebook$' + me['id'], me['email'].split('@')[0], me['email'])
+
+class TwitterSignIn(OAuthSignIn):
+    def __init__(self):
+        super(TwitterSignIn, self).__init__('twitter')
+        self.service = OAuth1Service(
+                    name = 'twitter',
+                    consumer_key=self.consumer_id,
+                    consumer_secret=self.consumer_secret,
+                    request_token_url='https://api.twitter.com/oauth/request_token',
+                    authorize_url = 'https://api.twitter.com/oauth/authorize',
+                    access_token_url = 'https://api.twitter.com/oauth/access_token',
+                    base_url = 'https://api.twitter.com/1.1/'
         )
 
-        me = oauth_session.get('me?fields=id,email').json()
+    def authorize(self):
+        params = {
+            'oauth_callback': self.get_callback_url()
+        }
+        request_token = self.service.get_request_token(params = params)
+
+        session['request_token'] = request_token
+        return redirect(self.service.get_authorize_url(request_token[0]))
+
+    def callback(self):
+        request_token = session['request_token']
+        if 'oauth_verifier' not in request.args:
+            return None, None, None
+        oauth_session = self.service.get_auth_session(request_token[0],request_token[1],
+            data={'oauth_verifier': request.args['oauth_verifier']}
+        )
+
+        me = oauth_session.get('account/verify_credentials.json').json()
         print(me)
 
-        return ('facebook$' + me['id'], me.get('email').split('@')[0], me.get('email'))
+        return ('twitter$' + str(me['id']), me['screen_name'], None)
