@@ -38,5 +38,9 @@ class oAuthConfig(object):
         "twitter": {
                 "id": environ.get("TWITTER_API_KEY"),
                 "secret": environ.get("TWITTER_API_SECRET")
+        },
+        "github": {
+                "id": environ.get("GITHUB_CLIENT_ID"),
+                "secret": environ.get("GITHUB_CLIENT_SECRET")
         }
     }

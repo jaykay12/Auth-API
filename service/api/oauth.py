@@ -104,3 +104,36 @@ class TwitterSignIn(OAuthSignIn):
         print(me)
 
         return ('twitter$' + str(me['id']), me['screen_name'], None)
+
+class GithubSignIn(OAuthSignIn):
+    def __init__(self):
+        super(GithubSignIn, self).__init__('github')
+        self.service = OAuth2Service(
+                    name = 'github',
+                    client_id = self.consumer_id,
+                    client_secret = self.consumer_secret,
+                    authorize_url = 'https://github.com/login/oauth/authorize',
+                    access_token_url = 'https://github.com/login/oauth/access_token',
+                    base_url = 'https://api.github.com/'
+        )
+
+    def authorize(self):
+        params = {
+            'scope': 'user',
+            'redirect_uri': self.get_callback_url()
+        }
+        return redirect(self.service.get_authorize_url(**params))
+
+    def callback(self):
+
+        if 'code' not in request.args:
+            return None,None,None
+        data = {
+            'code': request.args['code'],
+            'grant_type': 'authorization_code',
+            'redirect_uri': self.get_callback_url()
+        }
+        oauth_session = self.service.get_auth_session(data = data)
+        me = oauth_session.get('user').json()
+
+        return ('github$' + str(me['id']), str(me['login']), str(me['email']))
