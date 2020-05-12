@@ -11,7 +11,7 @@
  `export SECRET_KEY='<API-SECRET-KEY>'`   
  `export DEVELOPMENT_DATABASE_URL='sqlite:///auth.db'`    
  `export ENV='DEVELOPMENT'`
- + Run on dev environment using `bash start-dev.sh`
+ + Run on dev environment using `bash start.sh --dev`
 
 
 ## Running on Stage Environment
@@ -24,7 +24,7 @@
   - Close postgres console using `\q`
 + Add the following line to the file **api.env**   
 `export STAGE_DATABASE_URL='postgresql+psycopg2://<POSTGRES_USER>:<POSTGRES_PASS>@localhost/<POSTGRES_DB>'`
-+ Run on stage environment using `bash start-stage.sh`
++ Run on stage environment using `bash start.sh --stage`
 
 ## Running on Production Environment
 + Install Heroku CLI on machine using `curl https://cli-assets.heroku.com/install-ubuntu.sh | sh` and verify using `heroku --version`
@@ -47,7 +47,7 @@
 `export TESTING_DATABASE_URL='sqlite:///:memory:'`
 + Run tests on dev environment using `bash run-tests.sh`
 + Signup to Travis CI using GitHub and toggle the button to ON for Auth-API from `https://travis-ci.org/github/jaykay12/Auth-API`
-+ Add the following entries in `Environment Variables` of Travis CI
++ Add the following entries in `Environment Variables` of Travis CI    
   `ENV = 'TESTING'`      
   `SECRET_KEY = <API-SECRET-KEY`      
   `TESTING_DATABASE_URL = 'sqlite:///:memory:'`

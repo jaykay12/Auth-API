@@ -28,3 +28,27 @@ class TestConfig(object):
     SQLALCHEMY_DATABASE_URI = environ.get("TESTING_DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
+class oAuthConfig(object):
+    OAUTH_CREDENTIALS = {
+        "facebook": {
+                "id": environ.get("FACEBOOK_APP_ID"),
+                "secret": environ.get("FACEBOOK_APP_SECRET")
+                },
+        "twitter": {
+                "id": environ.get("TWITTER_API_KEY"),
+                "secret": environ.get("TWITTER_API_SECRET")
+        },
+        "github": {
+                "id": environ.get("GITHUB_CLIENT_ID"),
+                "secret": environ.get("GITHUB_CLIENT_SECRET")
+        },
+        "google": {
+                "id": environ.get("GOOGLE_CLIENT_ID"),
+                "secret": environ.get("GOOGLE_CLIENT_SECRET")
+        },
+        "linkedin": {
+                "id": environ.get("LINKEDIN_CLIENT_ID"),
+                "secret": environ.get("LINKEDIN_CLIENT_SECRET")
+        }
+    }
