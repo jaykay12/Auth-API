@@ -178,3 +178,49 @@ class GoogleSignIn(OAuthSignIn):
         me = oauth_session.get('userinfo').json()
 
         return ('google$' + str(me['sub']), str(me['name']), str(me['email']))
+
+class LinkedInSignIn(OAuthSignIn):
+
+    # https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow
+    # https://docs.microsoft.com/en-gb/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin
+
+    def __init__(self):
+        super(LinkedInSignIn, self).__init__('linkedin')
+        self.service = OAuth2Service(
+                    name = 'linkedin',
+                    client_id = self.consumer_id,
+                    client_secret = self.consumer_secret,
+                    authorize_url = 'https://www.linkedin.com/oauth/v2/authorization',
+                    access_token_url = 'https://www.linkedin.com/oauth/v2/accessToken',
+                    base_url = 'https://api.linkedin.com/v2/'
+        )
+
+    def authorize(self):
+        params = {
+            'scope': 'r_liteprofile r_emailaddress',
+            'response_type': 'code',
+            'redirect_uri': self.get_callback_url()
+        }
+        return redirect(self.service.get_authorize_url(**params))
+
+    def callback(self):
+
+        def decode_json(payload):
+            return json.loads(payload.decode('utf-8'))
+
+        if 'code' not in request.args:
+            return None,None,None
+        data = {
+            'code': request.args['code'],
+            'grant_type': 'authorization_code',
+            'redirect_uri': self.get_callback_url()
+        }
+        oauth_session = self.service.get_auth_session(data = data, decoder = decode_json)
+        me = oauth_session.get('me').json()
+        email = oauth_session.get('emailAddress?q=members&projection=(elements*(handle~))').json()
+
+        return (
+                'linkedin$' + str(me['id']),
+                str(me['localizedFirstName'])+str(me['localizedLastName']),
+                str(email['elements'][0]['handle~']['emailAddress'])
+        )
