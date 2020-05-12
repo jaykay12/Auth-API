@@ -101,7 +101,6 @@ class TwitterSignIn(OAuthSignIn):
         )
 
         me = oauth_session.get('account/verify_credentials.json').json()
-        print(me)
 
         return ('twitter$' + str(me['id']), me['screen_name'], None)
 

@@ -15,9 +15,11 @@ def create_app():
     """Loading configuratons."""
     if environ.get('ENV') == 'PRODUCTION':
         app.config.from_object('config.ProductionConfig')
+        app.config.from_object('config.oAuthConfig')
         accesslogger.info("Loaded: Configuration of Production")
     elif environ.get('ENV') == 'STAGE':
         app.config.from_object('config.StageConfig')
+        app.config.from_object('config.oAuthConfig')
         accesslogger.info("Loaded: Configuration of Stage")
     elif environ.get('ENV') == 'TESTING':
         app.config.from_object('config.TestConfig')
@@ -33,6 +35,7 @@ def create_app():
     with app.app_context():
         from . import routes_auth
         from . import routes_oauth
+        db.drop_all()
         db.create_all()
 
         return app
