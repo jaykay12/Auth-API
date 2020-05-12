@@ -137,3 +137,44 @@ class GithubSignIn(OAuthSignIn):
         me = oauth_session.get('user').json()
 
         return ('github$' + str(me['id']), str(me['login']), str(me['email']))
+
+class GoogleSignIn(OAuthSignIn):
+
+    # https://accounts.google.com/.well-known/openid-configuration
+    # https://developers.google.com/identity/protocols/oauth2/openid-connect
+
+    def __init__(self):
+        super(GoogleSignIn, self).__init__('google')
+        self.service = OAuth2Service(
+                    name = 'google',
+                    client_id = self.consumer_id,
+                    client_secret = self.consumer_secret,
+                    authorize_url = 'https://accounts.google.com/o/oauth2/v2/auth',
+                    access_token_url = 'https://oauth2.googleapis.com/token',
+                    base_url = 'https://openidconnect.googleapis.com/v1/'
+        )
+
+    def authorize(self):
+        params = {
+            'scope': 'openid profile email',
+            'response_type': 'code',
+            'redirect_uri': self.get_callback_url()
+        }
+        return redirect(self.service.get_authorize_url(**params))
+
+    def callback(self):
+
+        def decode_json(payload):
+            return json.loads(payload.decode('utf-8'))
+
+        if 'code' not in request.args:
+            return None,None,None
+        data = {
+            'code': request.args['code'],
+            'grant_type': 'authorization_code',
+            'redirect_uri': self.get_callback_url()
+        }
+        oauth_session = self.service.get_auth_session(data = data, decoder = decode_json)
+        me = oauth_session.get('userinfo').json()
+
+        return ('google$' + str(me['sub']), str(me['name']), str(me['email']))

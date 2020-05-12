@@ -42,5 +42,9 @@ class oAuthConfig(object):
         "github": {
                 "id": environ.get("GITHUB_CLIENT_ID"),
                 "secret": environ.get("GITHUB_CLIENT_SECRET")
+        },
+        "google": {
+                "id": environ.get("GOOGLE_CLIENT_ID"),
+                "secret": environ.get("GOOGLE_CLIENT_SECRET")
         }
     }
