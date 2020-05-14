@@ -35,7 +35,6 @@ def create_app():
     with app.app_context():
         from . import routes_auth
         from . import routes_oauth
-        db.drop_all()
         db.create_all()
 
         return app
