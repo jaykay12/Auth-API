@@ -10,4 +10,4 @@ Authentication API based on Flask-SQLAlchemy
 ![Heroku](http://heroku-badge.herokuapp.com/?app=auth-api-flask&root=/api)    
 
 
-API Documentation: https://documenter.getpostman.com/view/8735978/SzmZcg5S?version=latest
+[API Documentation](https://documenter.getpostman.com/view/8735978/SzmZcg5S?version=latest)
